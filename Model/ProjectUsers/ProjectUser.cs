@@ -1,7 +1,10 @@
-﻿namespace Container_App.Model.ProjectUsers
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Container_App.Model.ProjectUsers
 {
-    public class ProjectUserModel
+    public class ProjectUser
     {
+        [Key]
         public int ProjectUserId { get; set; }
         public int ProjectId { get; set; }
         public int UserId { get; set; }

@@ -19,7 +19,7 @@ namespace Container_App.Controllers
 
         [Authorize] // Yêu cầu xác thực
         [HttpPost("create-project")]
-        public async Task<ActionResult<ProjectModel>> CreateProject([FromBody] ProjectModel project)
+        public async Task<ActionResult<Project>> CreateProject([FromBody] Project project)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value); // Lấy userId từ token
 
@@ -38,7 +38,7 @@ namespace Container_App.Controllers
             }
         }
         [HttpPost("islock-project")]
-        public async Task<ActionResult<ProjectModel>> IsLockProject(int projectId)
+        public async Task<ActionResult<Project>> IsLockProject(int projectId)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Container_App.Controllers
         }
 
         [HttpPost("send-invites")]
-        public async Task<IActionResult> SendProjectInvites([FromBody] InviteRequestModel request)
+        public async Task<IActionResult> SendProjectInvites([FromBody] InviteRequest request)
         {
             if (request.UserIds == null || request.UserIds.Count == 0)
                 return BadRequest("User IDs are required.");

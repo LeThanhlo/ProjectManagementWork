@@ -1,7 +1,10 @@
-﻿namespace Container_App.Model.Projects
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Container_App.Model.Projects
 {
-    public class ProjectModel
+    public class Project
     {
+        [Key]
         public int ProjectId { get; set; }
         public string ProjectName { get; set; }
         public string Description { get; set; }

@@ -5,8 +5,8 @@ namespace Container_App.Repository.ProjectUserInviteRepository
     public interface IProjectUserInviteRepository
     {
         Task SendInvitesAsync(int projectId, List<int> userIds);
-        Task<ProjectUserInviteModel> GetInviteAsync(int inviteId);
-        Task AcceptInviteAsync(ProjectUserInviteModel invite);
-        Task DeclineInviteAsync(ProjectUserInviteModel invite);
+        Task<ProjectUserInvite> GetInviteAsync(int inviteId);
+        Task AcceptInviteAsync(ProjectUserInvite invite);
+        Task DeclineInviteAsync(ProjectUserInvite invite);
     }
 }

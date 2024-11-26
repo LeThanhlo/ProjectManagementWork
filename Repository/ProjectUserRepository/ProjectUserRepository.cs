@@ -11,7 +11,7 @@ namespace Container_App.Repository.ProjectUserRepository
         {
             _context = context;
         }
-        public async Task AddUserToProjectAsync(ProjectUserModel projectUser)
+        public async Task AddUserToProjectAsync(ProjectUser projectUser)
         {
             _context.ProjectUsers.Add(projectUser);
             await _context.SaveChangesAsync();

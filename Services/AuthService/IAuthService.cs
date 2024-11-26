@@ -4,7 +4,7 @@ namespace Container_App.Services.AuthService
 {
     public interface IAuthService
     {
-        Task<TokenModel> Login(string username, string password);
-        Task<TokenModel> RefreshToken(string refreshToken);
+        Task<Token> Login(string username, string password);
+        Task<Token> RefreshToken(string refreshToken);
     }
 }

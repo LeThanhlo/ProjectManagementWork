@@ -4,7 +4,7 @@ namespace Container_App.Repository.ProjectRepository
 {
     public interface IProjectRepository
     {
-        Task<ProjectModel> AddProjectAsync(ProjectModel project);
-        Task<ProjectModel> IsLockProjectAsync(int projectId);
+        Task<Project> AddProjectAsync(Project project);
+        Task<Project> IsLockProjectAsync(int projectId);
     }
 }

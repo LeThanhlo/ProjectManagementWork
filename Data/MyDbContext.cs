@@ -15,13 +15,15 @@ namespace Container_App.Data
     {
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options) { }
 
-        public DbSet<UserModel> Users { get; set; }
+        public DbSet<Users> Users { get; set; }
         public DbSet<RefreshTokenModel> RefreshTokens { get; set; }
-        public DbSet<ProjectModel> Projects { get; set; }
-        public DbSet<ProjectUserInviteModel> ProjectUserInvites { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectUserInvite> ProjectUserInvites { get; set; }
 
-        public DbSet<ProjectUserModel> ProjectUsers { get; set; }
-
-        public DbSet<RoleGroupModel> RoleGroups { get; set; }
+        public DbSet<ProjectUser> ProjectUsers { get; set; }
+     
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {          
+        }
     }
 }

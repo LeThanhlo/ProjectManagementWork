@@ -10,7 +10,7 @@ namespace Container_App.Repository.ProjectUserInviteRepository
         {
             _context = context;
         }
-        public async Task AcceptInviteAsync(ProjectUserInviteModel invite)
+        public async Task AcceptInviteAsync(ProjectUserInvite invite)
         {
             invite.Status = 1; // Accepted
             invite.AcceptedAt = DateTime.Now;
@@ -18,21 +18,21 @@ namespace Container_App.Repository.ProjectUserInviteRepository
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeclineInviteAsync(ProjectUserInviteModel invite)
+        public async Task DeclineInviteAsync(ProjectUserInvite invite)
         {
             invite.Status = 2; // Declined
             _context.ProjectUserInvites.Update(invite);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ProjectUserInviteModel> GetInviteAsync(int inviteId)
+        public async Task<ProjectUserInvite> GetInviteAsync(int inviteId)
         {
             return await _context.ProjectUserInvites.FindAsync(inviteId);
         }
 
         public async Task SendInvitesAsync(int projectId, List<int> userIds)
         {
-            var invites = userIds.Select(userId => new ProjectUserInviteModel
+            var invites = userIds.Select(userId => new ProjectUserInvite
             {
                 ProjectId = projectId,
                 UserId = userId,

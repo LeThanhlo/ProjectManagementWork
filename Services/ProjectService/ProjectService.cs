@@ -33,7 +33,7 @@ namespace Container_App.Services.ProjectService
 
             await _projectuserInviteRepository.AcceptInviteAsync(invite);
 
-            var projectUser = new ProjectUserModel
+            var projectUser = new ProjectUser
             {
                 ProjectId = invite.ProjectId,
                 UserId = invite.UserId,
@@ -45,7 +45,7 @@ namespace Container_App.Services.ProjectService
             return true;
         }
 
-        public async Task<ProjectModel> CreateProjectAsync(ProjectModel project, int userId)
+        public async Task<Project> CreateProjectAsync(Project project, int userId)
         {
             long temp = await _userRepository.CheckAdmin(userId);
             if (temp == 0)
@@ -67,7 +67,7 @@ namespace Container_App.Services.ProjectService
             return true;
         }
 
-        public Task<ProjectModel> IsLockProjectAsync(int projectId)
+        public Task<Project> IsLockProjectAsync(int projectId)
         {
             return _projectRepository.IsLockProjectAsync(projectId);
         }

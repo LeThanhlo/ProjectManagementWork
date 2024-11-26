@@ -5,10 +5,10 @@ namespace Container_App.Repository.UserRepository
 {
     public interface IUserRepository
     {
-        Task<List<UserModel>> GetUsers(PagedResult page);
-        Task<UserModel> GetUserById(int id);
-        Task<int> CreateUser(UserModel user);
-        Task<int> UpdateUser(UserModel user);
+        Task<List<Users>> GetUsers(PagedResult page);
+        Task<Users> GetUserById(int id);
+        Task<int> CreateUser(Users user);
+        Task<int> UpdateUser(Users user);
         Task<int> DeleteUser(int id);
         Task<long> CheckAdmin(int userId);
     }

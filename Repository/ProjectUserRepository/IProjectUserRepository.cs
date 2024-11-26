@@ -4,7 +4,7 @@ namespace Container_App.Repository.ProjectUserRepository
 {
     public interface IProjectUserRepository
     {
-        Task AddUserToProjectAsync(ProjectUserModel projectUser);
+        Task AddUserToProjectAsync(ProjectUser projectUser);
         Task<bool> IsUserInProjectAsync(int projectId, int userId);
     }
 }

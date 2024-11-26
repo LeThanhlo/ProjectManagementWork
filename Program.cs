@@ -7,6 +7,7 @@ using Container_App.Repository.UserRepository;
 using Container_App.Services.AuthService;
 using Container_App.Services.ProjectService;
 using Container_App.Services.UserService;
+using Container_App.utilities;
 using dotenv.net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ builder.Services.AddSwaggerGen();
 #region Connection String
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MyDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseNpgsql(connectionString));
 #endregion
 
 #region Add Repository
@@ -33,6 +34,8 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectUserRepository, ProjectUserRepository>();
 builder.Services.AddScoped<IProjectUserInviteRepository, ProjectUserInviteRepository>();
+builder.Services.AddScoped<SqlQueryHelper>();
+builder.Services.AddScoped<Config>();
 #endregion
 
 #region Add Service

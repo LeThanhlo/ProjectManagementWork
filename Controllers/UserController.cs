@@ -18,7 +18,7 @@ namespace Container_App.Controllers
         }
 
         [HttpPost("get-all-user")]
-        public async Task<ActionResult<List<UserModel>>> GetUsers(PagedResult page)
+        public async Task<ActionResult<List<Users>>> GetUsers(PagedResult page)
         {
             var users = await _userService.GetUsers(page);
             return Ok(users);
@@ -26,7 +26,7 @@ namespace Container_App.Controllers
 
         [Authorize]
         [HttpGet("get-user-by-id/{id}")]
-        public async Task<ActionResult<UserModel>> GetUserById(int id)
+        public async Task<ActionResult<Users>> GetUserById(int id)
         {
             var user = await _userService.GetUserById(id);
             if (user == null)
@@ -35,9 +35,9 @@ namespace Container_App.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("create-user")]
-        public async Task<ActionResult<ResponseModel>> CreateUser(UserModel user)
+        public async Task<ActionResult<ResponseModel>> CreateUser(Users user)
         {
             int rowsAffected = await _userService.CreateUser(user);
 
@@ -57,7 +57,7 @@ namespace Container_App.Controllers
 
         [Authorize]
         [HttpPut("update-user/{id}")]
-        public async Task<ActionResult<ResponseModel>> UpdateUser(int id, UserModel user)
+        public async Task<ActionResult<ResponseModel>> UpdateUser(int id, Users user)
         {
             user.UserId = id; // Đảm bảo UserId được thiết lập
             int rowsAffected = await _userService.UpdateUser(user);

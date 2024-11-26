@@ -12,7 +12,7 @@ namespace Container_App.Repository.ProjectRepository
         {
             _context = context;
         }
-        public async Task<ProjectModel> AddProjectAsync(ProjectModel project)
+        public async Task<Project> AddProjectAsync(Project project)
         {
             project.Status = (int)StatusProject.Active;
             _context.Projects.Add(project);
@@ -20,7 +20,7 @@ namespace Container_App.Repository.ProjectRepository
             return project;
         }
 
-        public async Task<ProjectModel> IsLockProjectAsync(int projectId)
+        public async Task<Project> IsLockProjectAsync(int projectId)
         {
             var pro = await _context.Projects.FindAsync(projectId);
             if (pro == null) return null;

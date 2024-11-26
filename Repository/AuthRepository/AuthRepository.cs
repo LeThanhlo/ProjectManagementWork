@@ -1,6 +1,7 @@
 ﻿using Container_App.Data;
 using Container_App.Model.Tokens;
 using Container_App.Model.Users;
+using Container_App.utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Container_App.Repository.AuthRepository
@@ -8,15 +9,18 @@ namespace Container_App.Repository.AuthRepository
     public class AuthRepository: IAuthRepository
     {
         private readonly MyDbContext _context;
+        private readonly Config _config;
 
-        public AuthRepository(MyDbContext context)
+        public AuthRepository(MyDbContext context, Config config)
         {
             _context = context;
+            _config = config;
         }
 
-        public async Task<UserModel> GetUserByUsernameAndPassword(string username, string password)
+        public async Task<Users> GetUserByUsernameAndPassword(string username, string password)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+            string passwordHash = _config.HashPassword(password);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == passwordHash);
         }
 
         public async Task<RefreshTokenModel> GetRefreshToken(string token)
@@ -41,7 +45,7 @@ namespace Container_App.Repository.AuthRepository
             }
         }
 
-        public async Task<UserModel> GetUserByID(int Id)
+        public async Task<Users> GetUserByID(int Id)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.UserId == Id);
         }

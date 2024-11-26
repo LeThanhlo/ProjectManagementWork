@@ -23,7 +23,7 @@ namespace Container_App.Services.AuthService
             _jwtSecretKey = configuration["JWT_SECRET_KEY"];
             _configuration = configuration;
         }
-        public async Task<TokenModel> Login(string username, string password)
+        public async Task<Token> Login(string username, string password)
         {
             var user = await _authRepository.GetUserByUsernameAndPassword(username, password);
             if (user == null) return null;
@@ -33,14 +33,14 @@ namespace Container_App.Services.AuthService
 
             await _authRepository.SaveRefreshToken(refreshToken);
 
-            return new TokenModel
+            return new Token
             {
                 AccessToken = token,
                 RefreshToken = refreshToken.Token
             };
         }
 
-        public async Task<TokenModel> RefreshToken(string refreshToken)
+        public async Task<Token> RefreshToken(string refreshToken)
         {
             var storedToken = await _authRepository.GetRefreshToken(refreshToken);
 
@@ -58,14 +58,14 @@ namespace Container_App.Services.AuthService
             await _authRepository.RevokeRefreshToken(refreshToken); // Revoke old refresh token
             await _authRepository.SaveRefreshToken(newRefreshToken); // Save new refresh token
 
-            return new TokenModel
+            return new Token
             {
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken.Token
             };
         }
 
-        private string GenerateAccessToken(UserModel user)
+        private string GenerateAccessToken(Users user)
         {
             var claims = new[]
             {
@@ -93,7 +93,7 @@ namespace Container_App.Services.AuthService
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private RefreshTokenModel GenerateRefreshToken(UserModel user)
+        private RefreshTokenModel GenerateRefreshToken(Users user)
         {
             var refreshToken = new RefreshTokenModel
             {

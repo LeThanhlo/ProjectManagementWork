@@ -1,22 +1,24 @@
 ﻿using Container_App.Data;
 using Container_App.Model.Users;
 using Container_App.utilities;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Container_App.Repository.UserRepository
 {
     public class UserRepository : IUserRepository
     {
         private readonly SqlQueryHelper _sqlQueryHelper;
+        private readonly Config _config;
 
-        public UserRepository(SqlQueryHelper sqlQueryHelper)
+        public UserRepository(SqlQueryHelper sqlQueryHelper, Config config)
         {
             _sqlQueryHelper = sqlQueryHelper;
+            _config = config;
         }
 
 
-        public async Task<List<UserModel>> GetUsers(PagedResult page)
+        public async Task<List<Users>> GetUsers(PagedResult page)
         {
             string sqlQuery = @"
                             SELECT * FROM Users 
@@ -26,69 +28,74 @@ namespace Container_App.Repository.UserRepository
                             OFFSET @Offset ROWS 
                             FETCH NEXT @PageSize ROWS ONLY";
 
-            // Tạo SqlParameter cho các tham số trong câu truy vấn
+            // Tạo NpgsqlParameter cho các tham số trong câu truy vấn
             var parameters = new[]
             {
-                new SqlParameter("@SearchTerm", page.SearchTerm ?? (object)DBNull.Value),
-                new SqlParameter("@Offset", (page.PageNumber - 1) * page.PageSize),
-                new SqlParameter("@PageSize", page.PageSize),               
+                new NpgsqlParameter("@SearchTerm", page.SearchTerm ?? (object)DBNull.Value),
+                new NpgsqlParameter("@Offset", (page.PageNumber - 1) * page.PageSize),
+                new NpgsqlParameter("@PageSize", page.PageSize),               
             };
 
-            return await _sqlQueryHelper.ExecuteQueryAsync<UserModel>(sqlQuery, parameters);
+            return await _sqlQueryHelper.ExecuteQueryAsync<Users>(sqlQuery, parameters);
         }
 
-        public async Task<UserModel> GetUserById(int id)
+        public async Task<Users> GetUserById(int id)
         {
             string sql = "SELECT * FROM Users WHERE UserId = @UserId";
 
-            // Tạo SqlParameter cho UserId
+            // Tạo NpgsqlParameter cho UserId
             var parameters = new[]
             {
-                new SqlParameter("@UserId", id)
+                new NpgsqlParameter("@UserId", id)
             };
 
-            return await _sqlQueryHelper.ExecuteQuerySingleAsync<UserModel>(sql, parameters);
+            return await _sqlQueryHelper.ExecuteQuerySingleAsync<Users>(sql, parameters);
         }
 
-        public async Task<int> CreateUser(UserModel user)
+        public async Task<int> CreateUser(Users user)
         {
-            string sqlGetMaxId = "SELECT ISNULL(MAX(UserId), 0) + 1 FROM Users";
+            // Mã hóa mật khẩu người dùng
+            user.Password = _config.HashPassword(user.Password);
+
+            // Lấy ID lớn nhất và cộng thêm 1 cho UserId mới
+            string sqlGetMaxId = "SELECT COALESCE(MAX(\"UserId\"), 0) + 1 FROM public.\"Users\";";
             user.UserId = await _sqlQueryHelper.ExecuteScalarAsync<int>(sqlGetMaxId);
 
+            // Câu lệnh INSERT
             string sqlInsert = @"
-                            INSERT INTO Users (UserId, Username, Password, FullName, RoleGroupId)
-                            VALUES (@UserId, @Username, @Password, @FullName, @RoleGroupId, @IsDel)";
+            INSERT INTO public.""Users"" (""UserId"", ""Username"", ""Password"", ""FullName"", ""IsDel"")
+            VALUES(@UserId, @Username, @Password, @FullName, @IsDel);";
 
-            // Tạo SqlParameter cho các tham số trong câu lệnh INSERT
+            // Tạo NpgsqlParameter cho các tham số trong câu lệnh INSERT
             var parameters = new[]
             {
-                new SqlParameter("@UserId", user.UserId),
-                new SqlParameter("@Username", user.Username),
-                new SqlParameter("@Password", user.Password),
-                new SqlParameter("@FullName", user.FullName),
-                new SqlParameter("@RoleGroupId", user.RoleGroupId),
-                new SqlParameter("@IsDel", 0)
+                new NpgsqlParameter("@UserId", user.UserId),
+                new NpgsqlParameter("@Username", user.Username),
+                new NpgsqlParameter("@Password", user.Password),
+                new NpgsqlParameter("@FullName", user.FullName),
+                new NpgsqlParameter("@IsDel", user.IsDel)
             };
 
+            // Thực thi câu lệnh INSERT
             int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sqlInsert, parameters);
             return rowsAffected; // Trả về số bản ghi bị ảnh hưởng
         }
 
-        public async Task<int> UpdateUser(UserModel user)
+
+        public async Task<int> UpdateUser(Users user)
         {
             string sql = @"
                         UPDATE Users
-                        SET Username = @Username, Password = @Password, FullName = @FullName, RoleGroupId = @RoleGroupId
+                        SET Username = @Username, Password = @Password, FullName = @FullName
                         WHERE UserId = @UserId";
 
             // Tạo SqlParameter cho các tham số trong câu lệnh UPDATE
             var parameters = new[]
             {
-                new SqlParameter("@UserId", user.UserId),
-                new SqlParameter("@Username", user.Username),
-                new SqlParameter("@Password", user.Password),
-                new SqlParameter("@FullName", user.FullName),
-                new SqlParameter("@RoleGroupId", user.RoleGroupId)
+                new NpgsqlParameter("@UserId", user.UserId),
+                new NpgsqlParameter("@Username", user.Username),
+                new NpgsqlParameter("@Password", user.Password),
+                new NpgsqlParameter("@FullName", user.FullName),              
             };
 
             int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sql, parameters);
@@ -102,10 +109,10 @@ namespace Container_App.Repository.UserRepository
                     SET IsDel = 1 
                     WHERE UserId = @UserId";
 
-            // Tạo SqlParameter cho UserId
+            // Tạo NpgsqlParameter cho UserId
             var parameters = new[]
             {
-                new SqlParameter("@UserId", id)
+                new NpgsqlParameter("@UserId", id)
             };
 
             int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sql, parameters);
@@ -122,10 +129,10 @@ namespace Container_App.Repository.UserRepository
                     WHERE u.UserId = @UserId AND rg.RoleGroupName = 'Admin'
                 ) THEN 1 ELSE 0 END";
 
-            // Tạo SqlParameter cho UserId
+            // Tạo NpgsqlParameter cho UserId
             var parameters = new[]
             {
-                new SqlParameter("@UserId", userId)
+                new NpgsqlParameter("@UserId", userId)
             };
 
             return await _sqlQueryHelper.ExecuteScalarAsync<long>(sql, parameters);

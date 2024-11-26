@@ -1,7 +1,10 @@
-﻿namespace Container_App.Model.Menus
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Container_App.Model.Menus
 {
-    public class MenuModel
+    public class Menu
     {
+        [Key]
         public int MenuId { get; set; }
         public string MenuName { get; set; }
         public string MenuUrl { get; set; }

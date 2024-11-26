@@ -1,7 +1,10 @@
-﻿namespace Container_App.Model.ProjectUserInvites
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Container_App.Model.ProjectUserInvites
 {
-    public class ProjectUserInviteModel
+    public class ProjectUserInvite
     {
+        [Key]       
         public int InviteId { get; set; }
         public int ProjectId { get; set; }
         public int UserId { get; set; }

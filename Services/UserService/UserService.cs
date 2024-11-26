@@ -16,22 +16,22 @@ namespace Container_App.Services.UserService
         {
             _userRepository = userRepository;
         }
-        public async Task<List<UserModel>> GetUsers(PagedResult page)
+        public async Task<List<Users>> GetUsers(PagedResult page)
         {
             return await _userRepository.GetUsers(page);
         }
 
-        public async Task<UserModel> GetUserById(int id)
+        public async Task<Users> GetUserById(int id)
         {
             return await _userRepository.GetUserById(id);
         }
 
-        public async Task<int> CreateUser(UserModel user)
+        public async Task<int> CreateUser(Users user)
         {
             return await _userRepository.CreateUser(user);
         }
 
-        public Task<int> UpdateUser(UserModel user)
+        public Task<int> UpdateUser(Users user)
         {
             return _userRepository.UpdateUser(user);
         }
