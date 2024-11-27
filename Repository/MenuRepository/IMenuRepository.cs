@@ -7,5 +7,7 @@ namespace Container_App.Repository.MenuRepository
     {
         Task<List<Menu>> GetUserMenus(int userId);
         Task<List<UserPermissionDto>> GetUserPermissions(int userId);
+        
+        Task<Menu> GetMenu(string menuname);
     }
 }

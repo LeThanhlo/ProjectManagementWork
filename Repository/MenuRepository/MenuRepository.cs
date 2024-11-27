@@ -12,6 +12,15 @@ namespace Container_App.Repository.MenuRepository
         {
             _sqlQueryHelper = sqlQueryHelper;
         }
+
+        public async Task<Menu> GetMenu(string menuname)
+        {
+            string sql = @"select * from ""Menu"" where ""MenuName"" = @MenuName;";
+            var parameters = new[] {new NpgsqlParameter("@MenuName", menuname)};
+            var menu = await _sqlQueryHelper.ExecuteQueryAsync<Menu>(sql, parameters);
+            return menu.FirstOrDefault();
+        }
+
         public async Task<List<Menu>> GetUserMenus(int userId)
         {
             string sql = @"

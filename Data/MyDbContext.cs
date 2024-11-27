@@ -10,6 +10,9 @@ using Container_App.Model.Roles;
 using Container_App.Model.ProjectUsers;
 using Container_App.Model.Dto;
 using Container_App.Model.Menus;
+using Container_App.Model.Permissions;
+using Container_App.Model.RolePermissions;
+using Container_App.Model.UserRoles;
 
 namespace Container_App.Data
 {
@@ -26,7 +29,12 @@ namespace Container_App.Data
         public DbSet<UserPermission> userPermission { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<UserPermissionDto> UserPermissionDto { get; set; }
-     
+
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<RoleMenuAccess> RoleMenuAccesss { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserPermission>()

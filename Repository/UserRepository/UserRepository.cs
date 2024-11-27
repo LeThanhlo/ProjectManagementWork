@@ -10,17 +10,22 @@ namespace Container_App.Repository.UserRepository
     {
         private readonly SqlQueryHelper _sqlQueryHelper;
         private readonly Config _config;
+        private readonly ILogger _logger;
 
-        public UserRepository(SqlQueryHelper sqlQueryHelper, Config config)
+        public UserRepository(SqlQueryHelper sqlQueryHelper, Config config, ILogger logger)
         {
             _sqlQueryHelper = sqlQueryHelper;
             _config = config;
+            _logger = logger;
         }
 
 
         public async Task<List<Users>> GetUsers(PagedResult page)
         {
-            string sqlQuery = @"
+            try
+            {
+
+                string sqlQuery = @"
                 SELECT * FROM ""Users"" 
                 WHERE (@SearchTerm IS NULL OR ""FullName"" ILIKE '%' || @SearchTerm || '%') 
                 AND ""IsDel"" = false
@@ -28,15 +33,20 @@ namespace Container_App.Repository.UserRepository
                 OFFSET @Offset ROWS 
                 FETCH NEXT @PageSize ROWS ONLY";
 
-            // Tạo NpgsqlParameter cho các tham số trong câu truy vấn
-            var parameters = new[]
-            {
+                // Tạo NpgsqlParameter cho các tham số trong câu truy vấn
+                var parameters = new[]
+                {
                 new NpgsqlParameter("@SearchTerm", page.SearchTerm ?? (object)DBNull.Value),
                 new NpgsqlParameter("@Offset", (page.PageNumber - 1) * page.PageSize),
                 new NpgsqlParameter("@PageSize", page.PageSize),
             };
 
-            return await _sqlQueryHelper.ExecuteQueryAsync<Users>(sqlQuery, parameters);
+                return await _sqlQueryHelper.ExecuteQueryAsync<Users>(sqlQuery, parameters);
+            }
+            catch (Exception ex) {
+                _logger.LogError(ex, "Error UserRepository Function GetUsers");
+            }
+            return null;
         }
 
 

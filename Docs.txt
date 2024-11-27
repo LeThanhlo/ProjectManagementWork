@@ -6,4 +6,3 @@
 4. Sau đó lấy userId và RoleId thêm vào bảng UserRole.
 5. Trường hợp phân quyền trên Menu mới thì phải thêm menu mới sau đó thêm dữ liệu vào bảng RoleMenuAccess.
 6. Trường hợp Menu đã có sẵn Permision tương ứng với Menu nào mà thêm dữ liệu vào bảng RoleMenuAccess cho hợp lý.
-
