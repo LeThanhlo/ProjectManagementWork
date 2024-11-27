@@ -7,6 +7,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Container_App.Model.Dto;
+using Container_App.Repository.MenuRepository;
 
 
 namespace Container_App.Services.AuthService
@@ -17,26 +19,38 @@ namespace Container_App.Services.AuthService
         private readonly IAuthRepository _authRepository;
         private readonly string _jwtSecretKey;
         private readonly IConfiguration _configuration;
-        public AuthService(IAuthRepository authRepository, IConfiguration configuration)
+        private readonly IMenuRepository _menuRepository;
+        public AuthService(IAuthRepository authRepository, IConfiguration configuration, IMenuRepository menuRepository)
         {
             _authRepository = authRepository;
             _jwtSecretKey = configuration["JWT_SECRET_KEY"];
             _configuration = configuration;
+            _menuRepository = menuRepository;
         }
-        public async Task<Token> Login(string username, string password)
+
+        public Task<List<UserPermission>> GetUserPermissions(int userId)
+        {
+            return _authRepository.GetUserPermissions(userId);
+        }
+
+        public Task<bool> HasPermission(int userId, string table, string action)
+        {
+            return _authRepository.HasPermission(userId, table, action);
+        }
+
+        public async Task<LoginResponseDto> Login(string username, string password)
         {
             var user = await _authRepository.GetUserByUsernameAndPassword(username, password);
             if (user == null) return null;
 
             var token = GenerateAccessToken(user);
-            var refreshToken = GenerateRefreshToken(user);
-
-            await _authRepository.SaveRefreshToken(refreshToken);
-
-            return new Token
+            var menus = await _menuRepository.GetUserMenus(user.UserId);
+            var permissions = await _menuRepository.GetUserPermissions(user.UserId);
+            return new LoginResponseDto
             {
                 AccessToken = token,
-                RefreshToken = refreshToken.Token
+                Menus = menus,
+                Permissions = permissions
             };
         }
 
@@ -69,10 +83,10 @@ namespace Container_App.Services.AuthService
         {
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-            new Claim(JwtRegisteredClaimNames.Jti, user.UserId.ToString()),
-            new Claim(JwtRegisteredClaimNames.Name, user.FullName.ToString())
-        };
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(JwtRegisteredClaimNames.Jti, user.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Name, user.FullName.ToString())
+            };
 
             var jwtSecretKey = _jwtSecretKey;
             if (string.IsNullOrEmpty(jwtSecretKey))

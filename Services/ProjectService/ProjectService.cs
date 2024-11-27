@@ -45,16 +45,10 @@ namespace Container_App.Services.ProjectService
             return true;
         }
 
-        public async Task<Project> CreateProjectAsync(Project project, int userId)
-        {
-            long temp = await _userRepository.CheckAdmin(userId);
-            if (temp == 0)
-            {
-                throw new UnauthorizedAccessException("Chỉ có quản lý mới được phép tạo dự án.");
-            }
-
+        public async Task<int> CreateProjectAsync(Project project, int userId)
+        {         
             project.CreatedBy = userId;
-            return await _projectRepository.AddProjectAsync(project);
+            return await _projectRepository.AddProjectAsync(project, userId);
         }
 
         public async Task<bool> DeclineInviteAsync(int inviteId)
@@ -67,7 +61,7 @@ namespace Container_App.Services.ProjectService
             return true;
         }
 
-        public Task<Project> IsLockProjectAsync(int projectId)
+        public Task<bool> IsLockProjectAsync(int projectId)
         {
             return _projectRepository.IsLockProjectAsync(projectId);
         }

@@ -1,5 +1,6 @@
 ﻿using Container_App.Data;
 using Container_App.Repository.AuthRepository;
+using Container_App.Repository.MenuRepository;
 using Container_App.Repository.ProjectRepository;
 using Container_App.Repository.ProjectUserInviteRepository;
 using Container_App.Repository.ProjectUserRepository;
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectUserRepository, ProjectUserRepository>();
 builder.Services.AddScoped<IProjectUserInviteRepository, ProjectUserInviteRepository>();
+builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 builder.Services.AddScoped<SqlQueryHelper>();
 builder.Services.AddScoped<Config>();
 #endregion
@@ -45,7 +47,7 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 #endregion
 
 
-var jwtSecretKey = "BECA4125763BA46B43FA472D96CEB";
+var jwtSecretKey = "pr5Oyw1J3I8E04g3XsPf5d8wPT9W2bMcwCm6qzHoOoI=";
 builder.Configuration["JWT_SECRET_KEY"] = jwtSecretKey;
 if (string.IsNullOrEmpty(jwtSecretKey))
 {

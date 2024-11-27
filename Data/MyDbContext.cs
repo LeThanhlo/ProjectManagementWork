@@ -8,6 +8,8 @@ using Container_App.Model.Projects;
 using Container_App.Model.ProjectUserInvites;
 using Container_App.Model.Roles;
 using Container_App.Model.ProjectUsers;
+using Container_App.Model.Dto;
+using Container_App.Model.Menus;
 
 namespace Container_App.Data
 {
@@ -21,9 +23,17 @@ namespace Container_App.Data
         public DbSet<ProjectUserInvite> ProjectUserInvites { get; set; }
 
         public DbSet<ProjectUser> ProjectUsers { get; set; }
+        public DbSet<UserPermission> userPermission { get; set; }
+        public DbSet<Menu> Menus { get; set; }
+        public DbSet<UserPermissionDto> UserPermissionDto { get; set; }
      
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {          
+        {
+            modelBuilder.Entity<UserPermission>()
+            .HasNoKey();
+
+            modelBuilder.Entity<UserPermissionDto>()
+                .HasNoKey();
         }
     }
 }

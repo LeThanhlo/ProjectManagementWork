@@ -21,27 +21,28 @@ namespace Container_App.Repository.UserRepository
         public async Task<List<Users>> GetUsers(PagedResult page)
         {
             string sqlQuery = @"
-                            SELECT * FROM Users 
-                            WHERE (@SearchTerm IS NULL OR FullName LIKE '%' + @SearchTerm + '%') 
-                            and IsDel = 0
-                            ORDER BY UserId
-                            OFFSET @Offset ROWS 
-                            FETCH NEXT @PageSize ROWS ONLY";
+                SELECT * FROM ""Users"" 
+                WHERE (@SearchTerm IS NULL OR ""FullName"" ILIKE '%' || @SearchTerm || '%') 
+                AND ""IsDel"" = false
+                ORDER BY ""UserId""
+                OFFSET @Offset ROWS 
+                FETCH NEXT @PageSize ROWS ONLY";
 
             // Tạo NpgsqlParameter cho các tham số trong câu truy vấn
             var parameters = new[]
             {
                 new NpgsqlParameter("@SearchTerm", page.SearchTerm ?? (object)DBNull.Value),
                 new NpgsqlParameter("@Offset", (page.PageNumber - 1) * page.PageSize),
-                new NpgsqlParameter("@PageSize", page.PageSize),               
+                new NpgsqlParameter("@PageSize", page.PageSize),
             };
 
             return await _sqlQueryHelper.ExecuteQueryAsync<Users>(sqlQuery, parameters);
         }
 
+
         public async Task<Users> GetUserById(int id)
         {
-            string sql = "SELECT * FROM Users WHERE UserId = @UserId";
+            string sql = "SELECT * FROM \"Users\" WHERE \"UserId\" = @UserId";
 
             // Tạo NpgsqlParameter cho UserId
             var parameters = new[]
@@ -85,9 +86,11 @@ namespace Container_App.Repository.UserRepository
         public async Task<int> UpdateUser(Users user)
         {
             string sql = @"
-                        UPDATE Users
-                        SET Username = @Username, Password = @Password, FullName = @FullName
-                        WHERE UserId = @UserId";
+                    UPDATE public.""Users""
+                    SET ""Username"" = @Username, 
+                        ""Password"" = @Password, 
+                        ""FullName"" = @FullName
+                    WHERE ""UserId"" = @UserId";
 
             // Tạo SqlParameter cho các tham số trong câu lệnh UPDATE
             var parameters = new[]
@@ -105,9 +108,9 @@ namespace Container_App.Repository.UserRepository
         public async Task<int> DeleteUser(int id)
         {
             string sql = @"
-                    UPDATE Users 
-                    SET IsDel = 1 
-                    WHERE UserId = @UserId";
+                    UPDATE  public.""Users""
+                    SET ""IsDel"" = true
+                    WHERE ""UserId"" = @UserId";
 
             // Tạo NpgsqlParameter cho UserId
             var parameters = new[]
@@ -119,25 +122,9 @@ namespace Container_App.Repository.UserRepository
             return rowsAffected; // Trả về số bản ghi bị ảnh hưởng
         }
 
-
-        public async Task<long> CheckAdmin(int userId)
+        public Task<long> CheckAdmin(int userId)
         {
-            string sql = @"
-                SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM RoleGroups rg
-                    JOIN Users u ON rg.RoleGroupId = u.RoleGroupId
-                    WHERE u.UserId = @UserId AND rg.RoleGroupName = 'Admin'
-                ) THEN 1 ELSE 0 END";
-
-            // Tạo NpgsqlParameter cho UserId
-            var parameters = new[]
-            {
-                new NpgsqlParameter("@UserId", userId)
-            };
-
-            return await _sqlQueryHelper.ExecuteScalarAsync<long>(sql, parameters);
+            throw new NotImplementedException();
         }
-
-
     }
 }

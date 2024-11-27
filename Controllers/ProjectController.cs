@@ -1,5 +1,7 @@
 ﻿using Container_App.Model.Projects;
 using Container_App.Model.ProjectUserInvites;
+using Container_App.Model.Users;
+using Container_App.Services.AuthService;
 using Container_App.Services.ProjectService;
 using Container_App.utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -11,22 +13,40 @@ namespace Container_App.Controllers
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _projectService;
+        private readonly IAuthService _authService;
 
-        public ProjectController(IProjectService projectService)
+        public ProjectController(IProjectService projectService, IAuthService authService)
         {
             _projectService = projectService;
+            _authService = authService;
         }
 
         [Authorize] // Yêu cầu xác thực
         [HttpPost("create-project")]
         public async Task<ActionResult<Project>> CreateProject([FromBody] Project project)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value); // Lấy userId từ token
+            var userId = Convert.ToInt32(User.FindFirst("jti")?.Value);
+          
 
             try
             {
+                // Kiểm tra quyền của người dùng
+                var hasPermission = await _authService.HasPermission(userId, "Project", "add");
+
+                if (!hasPermission)
+                {
+                    return Forbid("Bạn không có quyền thêm dự án.");
+                }
+
+                // Nếu có quyền, tiếp tục tạo project
                 var createdProject = await _projectService.CreateProjectAsync(project, userId);
-                return CreatedAtAction(nameof(CreateProject), new { id = createdProject.ProjectId }, createdProject);
+
+                var response = new ResponseModel(
+                    success: true,
+                    message: "Thêm project thành công!",
+                    data: createdProject
+                );
+                return Ok(response);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -37,12 +57,14 @@ namespace Container_App.Controllers
                 return StatusCode(500, ex.Message); // Trả về lỗi 500 cho các lỗi khác
             }
         }
+
+
         [HttpPost("islock-project")]
         public async Task<ActionResult<Project>> IsLockProject(int projectId)
         {
             try
             {
-                var pro = await _projectService.IsLockProjectAsync(projectId);
+                bool pro = await _projectService.IsLockProjectAsync(projectId);
                 return Ok(pro);
             }
             catch (UnauthorizedAccessException ex)

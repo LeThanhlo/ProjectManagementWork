@@ -16,10 +16,10 @@ namespace Container_App.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel request)
         {
-            var token = await _authService.Login(request.Username, request.Password);
-            if (token == null) return Unauthorized();
+            var res = await _authService.Login(request.Username, request.Password);
+            if (res == null) return Unauthorized();
 
-            return Ok(token);
+            return Ok(res);
         }
 
         [HttpPost("refresh-token")]
