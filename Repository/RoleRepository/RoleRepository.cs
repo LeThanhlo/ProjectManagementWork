@@ -30,5 +30,16 @@ namespace Container_App.Repository.RoleRepository
             int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sqlInsert, parameters);
             return rowsAffected;
         }
+
+        public async Task<int> DeleteRole(int RoleId)
+        {
+            string sql = @"delete from ""Role"" where ""RoleId"" = @RoleId";
+            var parameters = new[]
+            {
+                new NpgsqlParameter("@RoleId", RoleId),
+            };
+            int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sql, parameters);
+            return rowsAffected;
+        }
     }
 }

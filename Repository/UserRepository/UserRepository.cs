@@ -10,13 +10,11 @@ namespace Container_App.Repository.UserRepository
     {
         private readonly SqlQueryHelper _sqlQueryHelper;
         private readonly Config _config;
-        private readonly ILogger _logger;
 
-        public UserRepository(SqlQueryHelper sqlQueryHelper, Config config, ILogger logger)
+        public UserRepository(SqlQueryHelper sqlQueryHelper, Config config)
         {
             _sqlQueryHelper = sqlQueryHelper;
             _config = config;
-            _logger = logger;
         }
 
 
@@ -44,7 +42,7 @@ namespace Container_App.Repository.UserRepository
                 return await _sqlQueryHelper.ExecuteQueryAsync<Users>(sqlQuery, parameters);
             }
             catch (Exception ex) {
-                _logger.LogError(ex, "Error UserRepository Function GetUsers");
+                
             }
             return null;
         }

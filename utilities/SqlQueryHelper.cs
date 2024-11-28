@@ -1,6 +1,7 @@
 ﻿using Container_App.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Data.Common;
 
 namespace Container_App.utilities
 {
@@ -29,7 +30,7 @@ namespace Container_App.utilities
         {
             return await _context.Database.ExecuteSqlRawAsync(sql, parameters);
         }
-        public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] parameters)
+        public async Task<T?> ExecuteScalarAsync<T>(string sql, params object[] parameters)
         {
             using var command = _context.Database.GetDbConnection().CreateCommand();
             command.CommandText = sql;
@@ -52,6 +53,31 @@ namespace Container_App.utilities
 
             var result = await command.ExecuteScalarAsync();
             return (T)result; // Đảm bảo trả về đúng kiểu
+        }
+
+        public async Task<T?> ExecuteScalarAsync<T>(string sql, params DbParameter[] parameters)
+        {
+            using var command = _context.Database.GetDbConnection().CreateCommand();
+            command.CommandText = sql;
+
+            // Thêm các tham số từ mảng DbParameter
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    command.Parameters.Add(parameter);
+                }
+            }
+
+            if (command.Connection.State != ConnectionState.Open)
+            {
+                await command.Connection.OpenAsync();
+            }
+
+            var result = await command.ExecuteScalarAsync();
+
+            // Kiểm tra null và chuyển đổi kiểu
+            return result == DBNull.Value ? default : (T)Convert.ChangeType(result, typeof(T));
         }
     }
 }

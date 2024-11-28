@@ -1,4 +1,5 @@
 ﻿using Container_App.Model.Permissions;
+using Container_App.Model.Roles;
 using Container_App.Model.Users;
 using Container_App.utilities;
 using Npgsql;
@@ -18,7 +19,7 @@ namespace Container_App.Repository.PermissionRepository
             permission.PermissionId = await _sqlQueryHelper.ExecuteScalarAsync<int>(sqlGetMaxId);
             
             string sqlInsert = @"
-            INSERT INTO public.""Users"" (""PermissionId"", ""TableName"", ""CanView"", ""CanAdd"", ""CanEdit"", ""CanDelete"")
+            INSERT INTO public.""Permission"" (""PermissionId"", ""TableName"", ""CanView"", ""CanAdd"", ""CanEdit"", ""CanDelete"")
             VALUES(@PermissionId, @TableName, @CanView, @CanAdd, @CanEdit, @CanDelete);";
           
             var parameters = new[]
@@ -32,6 +33,17 @@ namespace Container_App.Repository.PermissionRepository
             };
         
             int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sqlInsert, parameters);
+            return rowsAffected;
+        }
+
+        public async Task<int> DeletePermission(int permissionId)
+        {
+            string sql = @"delete from ""Permission"" where ""PermissionId"" = @PermissionId";
+            var parameters = new[]
+            {
+                new NpgsqlParameter("@PermissionId", permissionId),
+            };
+            int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sql, parameters);
             return rowsAffected;
         }
 

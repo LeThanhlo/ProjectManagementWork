@@ -7,5 +7,7 @@ namespace Container_App.Repository.PermissionRepository
         Task<List<string>> GetListTableName();
 
         Task<int> CreatePermission(Permission permission);
+
+        Task<int> DeletePermission(int permissionId);
     }
 }

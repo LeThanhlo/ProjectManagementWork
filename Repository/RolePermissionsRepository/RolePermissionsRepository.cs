@@ -23,11 +23,22 @@ namespace Container_App.Repository.RolePermissionsRepository
 
             var parameters = new[]
             {
-                new NpgsqlParameter("@RoleId", permission.Id),
+                new NpgsqlParameter("@Id", permission.Id),
                 new NpgsqlParameter("@RoleId", permission.RoleId),
                 new NpgsqlParameter("@PermissionId", permission.PermissionId),
             };
             int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sqlInsert, parameters);
+            return rowsAffected;
+        }
+
+        public async Task<int> DeleteRolePermission(int roleId)
+        {
+            string sql = @"delete from ""RolePermissions"" where ""RoleId"" = @RoleId";
+            var parameters = new[]
+            {
+                new NpgsqlParameter("@RoleId", roleId),
+            };
+            int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sql, parameters);
             return rowsAffected;
         }
     }

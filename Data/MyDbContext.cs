@@ -13,6 +13,7 @@ using Container_App.Model.Menus;
 using Container_App.Model.Permissions;
 using Container_App.Model.RolePermissions;
 using Container_App.Model.UserRoles;
+using Container_App.Model.RoleMenuAccess;
 
 namespace Container_App.Data
 {
@@ -33,7 +34,7 @@ namespace Container_App.Data
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<RoleMenuAccess> RoleMenuAccesss { get; set; }
+        public DbSet<RoleMenuAcces> RoleMenuAccesss { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

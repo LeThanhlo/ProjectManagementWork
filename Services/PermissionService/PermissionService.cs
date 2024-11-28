@@ -15,6 +15,11 @@ namespace Container_App.Services.PermissionService
             return await _permissionRepository.CreatePermission(permission);
         }
 
+        public async Task<int> DeletePermission(int permissionId)
+        {
+            return await _permissionRepository.DeletePermission(permissionId);
+        }
+
         public async Task<List<string>> GetListTableName()
         {
             return await _permissionRepository.GetListTableName();

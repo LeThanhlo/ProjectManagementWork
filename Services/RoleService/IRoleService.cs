@@ -1,8 +1,8 @@
 ﻿using Container_App.Model.Roles;
 
-namespace Container_App.Repository.RoleRepository
+namespace Container_App.Services.RoleService
 {
-    public interface IRoleRepository
+    public interface IRoleService
     {
         Task<int> CreateRole(Role role);
         Task<int> DeleteRole(int RoleId);

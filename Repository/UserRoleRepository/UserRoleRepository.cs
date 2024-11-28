@@ -12,6 +12,20 @@ namespace Container_App.Repository.UserRoleRepository
         {
             _sqlQueryHelper = sqlQueryHelper;
         }
+
+        public async Task<int> CheckPermissionByUserIdAndTable(int userId, string tableName)
+        {
+            string sql = @"select ""PermissionId"" from ""UserRole"" ur, ""Permission"" p
+                        where p.""PermissionId"" = ur.""RoleId"" and ur.""UserId"" = @UserId and p.""TableName"" = @TableName;";
+            var parameters = new[]
+            {
+                new NpgsqlParameter("@UserId", userId),
+                new NpgsqlParameter("@TableName", tableName),               
+            };
+            var permissionId = await _sqlQueryHelper.ExecuteScalarAsync<int>(sql, parameters);
+            return permissionId;
+        }
+
         public async Task<int> CreateUserRole(UserRole userRole)
         {
             string sqlGetMaxId = "SELECT COALESCE(MAX(\"Id\"), 0) + 1 FROM public.\"UserRole\";";
@@ -29,6 +43,17 @@ namespace Container_App.Repository.UserRoleRepository
                 new NpgsqlParameter("@RoleId", userRole.RoleId),
             };
             int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sqlInsert, parameters);
+            return rowsAffected;
+        }
+
+        public async Task<int> DeleteUserRole(int RoleId)
+        {
+            string sql = @"delete from ""UserRole"" where ""RoleId"" = @RoleId";
+            var parameters = new[]
+            {              
+                new NpgsqlParameter("@RoleId", RoleId),
+            };
+            int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sql, parameters);
             return rowsAffected;
         }
     }

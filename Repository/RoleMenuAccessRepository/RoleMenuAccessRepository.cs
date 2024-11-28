@@ -31,6 +31,17 @@ namespace Container_App.Repository.RoleMenuAccessRepository
             };
             int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sqlInsert, parameters);
             return rowsAffected;
-        }      
+        }
+
+        public async Task<int> DeleteRoleMenuAccess(int roleId)
+        {
+            string sql = @"delete from ""RoleMenuAccess"" where ""RoleId"" = @RoleId";
+            var parameters = new[]
+            {
+                new NpgsqlParameter("@RoleId", roleId),
+            };
+            int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sql, parameters);
+            return rowsAffected;
+        }
     }
 }

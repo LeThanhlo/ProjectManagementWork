@@ -1,12 +1,23 @@
 ﻿using Container_App.Data;
 using Container_App.Repository.AuthRepository;
 using Container_App.Repository.MenuRepository;
+using Container_App.Repository.PermissionRepository;
 using Container_App.Repository.ProjectRepository;
 using Container_App.Repository.ProjectUserInviteRepository;
 using Container_App.Repository.ProjectUserRepository;
+using Container_App.Repository.RoleMenuAccessRepository;
+using Container_App.Repository.RolePermissionsRepository;
+using Container_App.Repository.RoleRepository;
 using Container_App.Repository.UserRepository;
+using Container_App.Repository.UserRoleRepository;
 using Container_App.Services.AuthService;
+using Container_App.Services.MenuService;
+using Container_App.Services.PermissionService;
 using Container_App.Services.ProjectService;
+using Container_App.Services.RoleMenuAccessService;
+using Container_App.Services.RolePermissionsService;
+using Container_App.Services.RoleService;
+using Container_App.Services.UserRoleService;
 using Container_App.Services.UserService;
 using Container_App.utilities;
 using dotenv.net;
@@ -38,12 +49,24 @@ builder.Services.AddScoped<IProjectUserInviteRepository, ProjectUserInviteReposi
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 builder.Services.AddScoped<SqlQueryHelper>();
 builder.Services.AddScoped<Config>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IRolePermissionsRepository, RolePermissionsRepository>();
+builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+builder.Services.AddScoped<IRoleMenuAccessRepository, RoleMenuAccessRepository>();
+builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 #endregion
 
 #region Add Service
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IRolePermissionsService, RolePermissionsService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+builder.Services.AddScoped<IRoleMenuAccessService, RoleMenuAccessService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
 #endregion
 
 
