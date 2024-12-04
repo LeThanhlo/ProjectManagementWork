@@ -58,7 +58,7 @@ namespace Container_App.Controllers
             }
         }
 
-
+        [Authorize]
         [HttpPost("islock-project")]
         public async Task<ActionResult<Project>> IsLockProject(int projectId)
         {
@@ -77,6 +77,7 @@ namespace Container_App.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("send-invites")]
         public async Task<IActionResult> SendProjectInvites([FromBody] InviteRequest request)
         {
@@ -87,6 +88,7 @@ namespace Container_App.Controllers
             return Ok("Invites sent successfully.");
         }
 
+        [Authorize]
         [HttpPost("accept-invite/{inviteId}")]
         public async Task<IActionResult> AcceptInvite(int inviteId)
         {
@@ -97,6 +99,7 @@ namespace Container_App.Controllers
             return Ok("Invite accepted successfully.");
         }
 
+        [Authorize] 
         [HttpPost("decline-invite/{inviteId}")]
         public async Task<IActionResult> DeclineInvite(int inviteId)
         {

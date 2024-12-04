@@ -39,7 +39,7 @@ namespace Container_App.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginModel request)
+        public async Task<IActionResult> Login([FromBody] LoginModel request)
         {
             var res = await _authService.Login(request.Username, request.Password);
             if (res == null) return Unauthorized();

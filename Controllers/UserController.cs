@@ -17,6 +17,7 @@ namespace Container_App.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         [HttpPost("get-all-user")]
         public async Task<ActionResult<List<Users>>> GetUsers(PagedResult page)
         {
