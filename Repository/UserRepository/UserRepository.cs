@@ -72,8 +72,8 @@ namespace Container_App.Repository.UserRepository
 
             // Câu lệnh INSERT
             string sqlInsert = @"
-            INSERT INTO public.""Users"" (""UserId"", ""Username"", ""Password"", ""FullName"", ""IsDel"")
-            VALUES(@UserId, @Username, @Password, @FullName, @IsDel);";
+            INSERT INTO public.""Users"" (""UserId"", ""Username"", ""Password"", ""FullName"", ""IsDel"", ""Address"", ""Email"", ""Phone"")
+            VALUES(@UserId, @Username, @Password, @FullName, @IsDel, @Address, @Email, @Phone);";
 
             // Tạo NpgsqlParameter cho các tham số trong câu lệnh INSERT
             var parameters = new[]
@@ -82,7 +82,10 @@ namespace Container_App.Repository.UserRepository
                 new NpgsqlParameter("@Username", user.Username),
                 new NpgsqlParameter("@Password", user.Password),
                 new NpgsqlParameter("@FullName", user.FullName),
-                new NpgsqlParameter("@IsDel", user.IsDel)
+                new NpgsqlParameter("@IsDel", user.IsDel),
+                new NpgsqlParameter("@Address", user.Address),
+                new NpgsqlParameter("@Email", user.Email),
+                new NpgsqlParameter("@Phone", user.Phone),
             };
 
             // Thực thi câu lệnh INSERT
@@ -95,18 +98,20 @@ namespace Container_App.Repository.UserRepository
         {
             string sql = @"
                     UPDATE public.""Users""
-                    SET ""Username"" = @Username, 
-                        ""Password"" = @Password, 
-                        ""FullName"" = @FullName
+                    SET ""FullName"" = @FullName,
+                        ""Address"" = @Address,
+                        ""Email"" = @Email,
+                        ""Phone"" = @Phone
                     WHERE ""UserId"" = @UserId";
 
             // Tạo SqlParameter cho các tham số trong câu lệnh UPDATE
             var parameters = new[]
             {
                 new NpgsqlParameter("@UserId", user.UserId),
-                new NpgsqlParameter("@Username", user.Username),
-                new NpgsqlParameter("@Password", user.Password),
-                new NpgsqlParameter("@FullName", user.FullName),              
+                new NpgsqlParameter("@FullName", user.FullName),
+                new NpgsqlParameter("@Address", user.Address),
+                new NpgsqlParameter("@Email", user.Email),
+                new NpgsqlParameter("@Phone", user.Phone),
             };
 
             int rowsAffected = await _sqlQueryHelper.ExecuteNonQueryAsync(sql, parameters);
@@ -133,6 +138,12 @@ namespace Container_App.Repository.UserRepository
         public Task<long> CheckAdmin(int userId)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int> CountRecord()
+        {
+            string sql = @"select count(*) from ""Users"" where ""IsDel"" = false";
+            return await _sqlQueryHelper.ExecuteScalarAsync<int>(sql);
         }
     }
 }

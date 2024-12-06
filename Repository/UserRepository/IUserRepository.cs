@@ -11,5 +11,7 @@ namespace Container_App.Repository.UserRepository
         Task<int> UpdateUser(Users user);
         Task<int> DeleteUser(int id);
         Task<long> CheckAdmin(int userId);
+
+        Task<int> CountRecord();
     }
 }

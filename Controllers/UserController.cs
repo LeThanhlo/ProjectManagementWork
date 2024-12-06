@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Container_App.utilities;
 using Container_App.Model.Users;
+using Container_App.Services.AuthService;
 
 namespace Container_App.Controllers
 {
@@ -11,10 +12,12 @@ namespace Container_App.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IAuthService authService)
         {
             _userService = userService;
+            _authService = authService;
         }
 
         [Authorize]
@@ -22,7 +25,14 @@ namespace Container_App.Controllers
         public async Task<ActionResult<List<Users>>> GetUsers(PagedResult page)
         {
             var users = await _userService.GetUsers(page);
-            return Ok(users);
+            var countRecord = await _userService.CountRecord();
+            var response = new ResponseModel(
+                        success: true,
+                        message: "Get danh sách user thành công!",
+                        data: users,
+                        affectedRows: countRecord
+                    );
+            return Ok(response);
         }
 
         [Authorize]
@@ -36,38 +46,68 @@ namespace Container_App.Controllers
         }
 
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("create-user")]
         public async Task<ActionResult<ResponseModel>> CreateUser(Users user)
         {
-            int rowsAffected = await _userService.CreateUser(user);
-
-            if (rowsAffected > 0)
+            var userId = Convert.ToInt32(User.FindFirst("jti")?.Value);
+            try
             {
-                var response = new ResponseModel(
-                    success: true,
-                    message: "Thêm user thành công!",
-                    data: user, // Trả về đối tượng user đã tạo
-                    affectedRows: rowsAffected
-                );
+                var hasPermission = await _authService.HasPermission(userId, "Users", "add");
 
-                return rowsAffected > 0 ? Ok(response) : NotFound(response);
+                if (!hasPermission)
+                {
+                    var response = new ResponseModel(
+                        success: false,
+                        message: "Bạn không có quyền thêm user!",                       
+                        data: null,
+                        affectedRows: 0
+                    );
+                    return Ok(response);
+                }
+                int rowsAffected = await _userService.CreateUser(user);
+
+                if (rowsAffected > 0)
+                {
+                    var response = new ResponseModel(
+                        success: true,
+                        message: "Thêm user thành công!",
+                        data: user, // Trả về đối tượng user đã tạo
+                        affectedRows: rowsAffected
+                    );
+
+                    return rowsAffected > 0 ? Ok(response) : NotFound(response);
+                }
             }
-            return BadRequest(new ResponseModel(false, "Thêm user thất bại!"));
+            catch (UnauthorizedAccessException ex)
+            {
+                return Forbid(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseModel(false, "Thêm user thất bại!"));
+            }
+            return Ok("Thêm user thất bại!");
         }
 
         [Authorize]
-        [HttpPut("update-user/{id}")]
-        public async Task<ActionResult<ResponseModel>> UpdateUser(int id, Users user)
+        [HttpPut("update-user")]
+        public async Task<ActionResult<ResponseModel>> UpdateUser([FromBody] Users user)
         {
-            user.UserId = id; // Đảm bảo UserId được thiết lập
+            var userId = Convert.ToInt32(User.FindFirst("jti")?.Value);
+            var hasPermission = await _authService.HasPermission(userId, "Users", "edit");
+
+            if (!hasPermission)
+            {
+                return Forbid("Bạn không có quyền cập nhật user.");
+            }
             int rowsAffected = await _userService.UpdateUser(user);
 
             var response = new ResponseModel(
                 success: rowsAffected > 0,
                 message: rowsAffected > 0 ? "Cập nhật user thành công!" : "Không tìm thấy user để cập nhật!",
-                data: user, // Trả về đối tượng user đã cập nhật
-                affectedRows: rowsAffected // Gửi số dòng bị ảnh hưởng
+                data: user,
+                affectedRows: rowsAffected
             );
 
             return rowsAffected > 0 ? Ok(response) : NotFound(response);
@@ -78,6 +118,13 @@ namespace Container_App.Controllers
         [HttpDelete("delete-user/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
+            var userId = Convert.ToInt32(User.FindFirst("jti")?.Value);
+            var hasPermission = await _authService.HasPermission(userId, "Users", "delete");
+
+            if (!hasPermission)
+            {
+                return Forbid("Bạn không có quyền xoá user user.");
+            }
             int rowsAffected = await _userService.DeleteUser(id);
 
             var response = new ResponseModel(

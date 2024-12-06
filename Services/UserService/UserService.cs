@@ -41,5 +41,9 @@ namespace Container_App.Services.UserService
             return await _userRepository.DeleteUser(id);
         }
 
+        public async Task<int> CountRecord()
+        {
+            return await _userRepository.CountRecord();
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace Container_App.Services.UserService
         Task<int> CreateUser(Users user);
         Task<int> UpdateUser(Users user);
         Task<int> DeleteUser(int id);
+        Task<int> CountRecord();
     }
 }
