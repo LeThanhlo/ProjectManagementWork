@@ -24,7 +24,7 @@ namespace Container_App.Controllers
             return Ok(users);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("get-user-by-id/{id}")]
         public async Task<ActionResult<Users>> GetUserById(int id)
         {

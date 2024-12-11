@@ -21,23 +21,23 @@ namespace Container_App.Repository.UserRepository
         public async Task<List<Users>> GetUsers(PagedResult page)
         {
             string sqlQuery = @"
-                            SELECT * FROM Users 
-                            WHERE (@SearchTerm IS NULL OR FullName LIKE '%' + @SearchTerm + '%') 
-                            and IsDel = 0
-                            ORDER BY UserId
-                            OFFSET @Offset ROWS 
-                            FETCH NEXT @PageSize ROWS ONLY";
+                SELECT * FROM Users 
+                WHERE (@SearchTerm IS NULL OR FullName ILIKE '%' || @SearchTerm || '%')
+                AND IsDel = 0
+                ORDER BY UserId
+                OFFSET @Offset LIMIT @PageSize";
 
             // Tạo NpgsqlParameter cho các tham số trong câu truy vấn
             var parameters = new[]
             {
                 new NpgsqlParameter("@SearchTerm", page.SearchTerm ?? (object)DBNull.Value),
                 new NpgsqlParameter("@Offset", (page.PageNumber - 1) * page.PageSize),
-                new NpgsqlParameter("@PageSize", page.PageSize),               
+                new NpgsqlParameter("@PageSize", page.PageSize),
             };
 
             return await _sqlQueryHelper.ExecuteQueryAsync<Users>(sqlQuery, parameters);
         }
+
 
         public async Task<Users> GetUserById(int id)
         {
