@@ -5,13 +5,37 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.2
 
--- Started on 2024-12-09 14:56:01
+-- Started on 2024-12-13 17:24:33
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET transaction_timeout = 0;
-SET client_encoding = 'BIG5';
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 4959 (class 1262 OID 16388)
+-- Name: Container_App; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE "Container_App" WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'English_United States.1252';
+
+
+ALTER DATABASE "Container_App" OWNER TO postgres;
+
+\connect "Container_App"
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
@@ -56,7 +80,7 @@ CREATE SEQUENCE public."Comment_CommentId_seq"
 ALTER SEQUENCE public."Comment_CommentId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4959 (class 0 OID 0)
+-- TOC entry 4960 (class 0 OID 0)
 -- Dependencies: 235
 -- Name: Comment_CommentId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -97,7 +121,7 @@ CREATE SEQUENCE public."Menu_MenuId_seq"
 ALTER SEQUENCE public."Menu_MenuId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4960 (class 0 OID 0)
+-- TOC entry 4961 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: Menu_MenuId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -139,7 +163,7 @@ CREATE SEQUENCE public."Permission_PermissionId_seq"
 ALTER SEQUENCE public."Permission_PermissionId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4961 (class 0 OID 0)
+-- TOC entry 4962 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: Permission_PermissionId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -216,7 +240,7 @@ CREATE SEQUENCE public."ProjectUserInvite_InviteId_seq"
 ALTER SEQUENCE public."ProjectUserInvite_InviteId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4962 (class 0 OID 0)
+-- TOC entry 4963 (class 0 OID 0)
 -- Dependencies: 237
 -- Name: ProjectUserInvite_InviteId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -241,7 +265,7 @@ CREATE SEQUENCE public."ProjectUser_ProjectUserId_seq"
 ALTER SEQUENCE public."ProjectUser_ProjectUserId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4963 (class 0 OID 0)
+-- TOC entry 4964 (class 0 OID 0)
 -- Dependencies: 233
 -- Name: ProjectUser_ProjectUserId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -266,7 +290,7 @@ CREATE SEQUENCE public."Project_ProjectId_seq"
 ALTER SEQUENCE public."Project_ProjectId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4964 (class 0 OID 0)
+-- TOC entry 4965 (class 0 OID 0)
 -- Dependencies: 227
 -- Name: Project_ProjectId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -310,7 +334,7 @@ CREATE SEQUENCE public."Request_RequestId_seq"
 ALTER SEQUENCE public."Request_RequestId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4965 (class 0 OID 0)
+-- TOC entry 4966 (class 0 OID 0)
 -- Dependencies: 231
 -- Name: Request_RequestId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -364,7 +388,7 @@ CREATE SEQUENCE public."RoleMenuAccess_AccessId_seq"
 ALTER SEQUENCE public."RoleMenuAccess_AccessId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4966 (class 0 OID 0)
+-- TOC entry 4967 (class 0 OID 0)
 -- Dependencies: 225
 -- Name: RoleMenuAccess_AccessId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -403,7 +427,7 @@ CREATE SEQUENCE public."Role_RoleId_seq"
 ALTER SEQUENCE public."Role_RoleId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4967 (class 0 OID 0)
+-- TOC entry 4968 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: Role_RoleId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -448,7 +472,7 @@ CREATE SEQUENCE public."Task_TaskId_seq"
 ALTER SEQUENCE public."Task_TaskId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4968 (class 0 OID 0)
+-- TOC entry 4969 (class 0 OID 0)
 -- Dependencies: 229
 -- Name: Task_TaskId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -506,7 +530,7 @@ CREATE SEQUENCE public."User_UserId_seq"
 ALTER SEQUENCE public."User_UserId_seq" OWNER TO postgres;
 
 --
--- TOC entry 4969 (class 0 OID 0)
+-- TOC entry 4970 (class 0 OID 0)
 -- Dependencies: 217
 -- Name: User_UserId_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -736,5 +760,241 @@ INSERT INTO public."UserRole" ("Id", "UserId", "RoleId") VALUES (8, 3, 7);
 -- TOC entry 4931 (class 0 OID 16390)
 -- Dependencies: 218
 -- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public."Users" ("UserId", "Username", "Password", "FullName", "IsDel", "Address", "Phone", "Email") VALUES (2, 'admin@gmail.com', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'Admin', false, 'Thạnh Xuân, Quận 12, TP.HCM', '0369854123', 'admin@gmail.com');
+INSERT INTO public."Users" ("UserId", "Username", "Password", "FullName", "IsDel", "Address", "Phone", "Email") VALUES (1, 'longlt', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'Lê Thành Long', false, 'Phường 10, Quận Gò Vấp, TP.HCM', '0123654784', 'longltAbs@gmail.com');
+INSERT INTO public."Users" ("UserId", "Username", "Password", "FullName", "IsDel", "Address", "Phone", "Email") VALUES (3, 'namth', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'Trần Thanh Nam', false, '152 Dương Đức Hiền, Tây Thạnh, Tân Phú, TP.HM', '0125478963', 'namth152@gmail.com');
+
+
+--
+-- TOC entry 4971 (class 0 OID 0)
+-- Dependencies: 235
+-- Name: Comment_CommentId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Comment_CommentId_seq"', 1, false);
+
+
+--
+-- TOC entry 4972 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: Menu_MenuId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Menu_MenuId_seq"', 3, true);
+
+
+--
+-- TOC entry 4973 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: Permission_PermissionId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Permission_PermissionId_seq"', 3, true);
+
+
+--
+-- TOC entry 4974 (class 0 OID 0)
+-- Dependencies: 237
+-- Name: ProjectUserInvite_InviteId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."ProjectUserInvite_InviteId_seq"', 1, false);
+
+
+--
+-- TOC entry 4975 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: ProjectUser_ProjectUserId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."ProjectUser_ProjectUserId_seq"', 1, false);
+
+
+--
+-- TOC entry 4976 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: Project_ProjectId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Project_ProjectId_seq"', 1, false);
+
+
+--
+-- TOC entry 4977 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: Request_RequestId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Request_RequestId_seq"', 1, false);
+
+
+--
+-- TOC entry 4978 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: RoleMenuAccess_AccessId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."RoleMenuAccess_AccessId_seq"', 5, true);
+
+
+--
+-- TOC entry 4979 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: Role_RoleId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Role_RoleId_seq"', 6, true);
+
+
+--
+-- TOC entry 4980 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: Task_TaskId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Task_TaskId_seq"', 1, false);
+
+
+--
+-- TOC entry 4981 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: User_UserId_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."User_UserId_seq"', 1, true);
+
+
+--
+-- TOC entry 4778 (class 2606 OID 16486)
+-- Name: Comment Comment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Comment"
+    ADD CONSTRAINT "Comment_pkey" PRIMARY KEY ("CommentId");
+
+
+--
+-- TOC entry 4766 (class 2606 OID 16431)
+-- Name: Menu Menu_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Menu"
+    ADD CONSTRAINT "Menu_pkey" PRIMARY KEY ("MenuId");
+
+
+--
+-- TOC entry 4764 (class 2606 OID 16422)
+-- Name: Permission Permission_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Permission"
+    ADD CONSTRAINT "Permission_pkey" PRIMARY KEY ("PermissionId");
+
+
+--
+-- TOC entry 4780 (class 2606 OID 16501)
+-- Name: ProjectUserInvite ProjectUserInvite_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ProjectUserInvite"
+    ADD CONSTRAINT "ProjectUserInvite_pkey" PRIMARY KEY ("InviteId");
+
+
+--
+-- TOC entry 4776 (class 2606 OID 16476)
+-- Name: ProjectUser ProjectUser_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."ProjectUser"
+    ADD CONSTRAINT "ProjectUser_pkey" PRIMARY KEY ("ProjectUserId");
+
+
+--
+-- TOC entry 4770 (class 2606 OID 16448)
+-- Name: Project Project_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Project"
+    ADD CONSTRAINT "Project_pkey" PRIMARY KEY ("ProjectId");
+
+
+--
+-- TOC entry 4774 (class 2606 OID 16468)
+-- Name: Request Request_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Request"
+    ADD CONSTRAINT "Request_pkey" PRIMARY KEY ("RequestId");
+
+
+--
+-- TOC entry 4768 (class 2606 OID 16438)
+-- Name: RoleMenuAccess RoleMenuAccess_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."RoleMenuAccess"
+    ADD CONSTRAINT "RoleMenuAccess_pkey" PRIMARY KEY ("AccessId");
+
+
+--
+-- TOC entry 4782 (class 2606 OID 16507)
+-- Name: RolePermissions RolePermissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."RolePermissions"
+    ADD CONSTRAINT "RolePermissions_pkey" PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 4762 (class 2606 OID 16415)
+-- Name: Role Role_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Role"
+    ADD CONSTRAINT "Role_pkey" PRIMARY KEY ("RoleId");
+
+
+--
+-- TOC entry 4772 (class 2606 OID 16458)
+-- Name: Task Task_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Task"
+    ADD CONSTRAINT "Task_pkey" PRIMARY KEY ("TaskId");
+
+
+--
+-- TOC entry 4784 (class 2606 OID 16512)
+-- Name: UserRole UserRole_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."UserRole"
+    ADD CONSTRAINT "UserRole_pkey" PRIMARY KEY ("Id");
+
+
+--
+-- TOC entry 4758 (class 2606 OID 16399)
+-- Name: Users User_Username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "User_Username_key" UNIQUE ("Username");
+
+
+--
+-- TOC entry 4760 (class 2606 OID 16397)
+-- Name: Users User_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "User_pkey" PRIMARY KEY ("UserId");
+
+
+-- Completed on 2024-12-13 17:24:33
+
+--
+-- PostgreSQL database dump complete
 --
 
