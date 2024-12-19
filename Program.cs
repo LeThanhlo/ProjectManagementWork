@@ -98,18 +98,6 @@ builder.Services.AddAuthentication(x =>
         ClockSkew = TimeSpan.Zero
     };
 });
-//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: MyAllowSpecificOrigins,
-//                      policy =>
-//                      {
-//                          policy.WithOrigins("http://localhost:4200",
-//                                              "http://localhost:4200")
-//                          .AllowAnyHeader()
-//                          .AllowAnyMethod();
-//                      });
-//});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("allowall", builder =>
